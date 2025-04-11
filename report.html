@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Report Water Issue | JalSetu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: url('https://wallpapers.com/images/hd/water-background-ye0s8kgan03ggvpg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #1e293b;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    .overlay {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+    }
+
+    .dark-mode {
+      background: url('https://wallpapers.com/images/hd/water-background-ye0s8kgan03ggvpg.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #f1f5f9;
+    }
+
+    .dark-mode .overlay {
+      background: rgba(15, 23, 42, 0.85);
+    }
+
+    .dark-mode input,
+    .dark-mode textarea,
+    .dark-mode select {
+      background-color: #1e293b;
+      color: #f1f5f9;
+      border: 1px solid #334155;
+    }
+
+    .heading-text {
+      color: #0b2545;
+      text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.6);
+      font-weight: bold;
+    }
+
+    .dark-mode .heading-text {
+      color: #e2e8f0;
+      text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    }
+
+    .recent-reports-label {
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #000000;
+      background-color: rgba(255, 255, 255, 0.75);
+      padding: 6px 12px;
+      border-radius: 8px;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .dark-mode .recent-reports-label {
+      color: #ffffff;
+      background-color: rgba(0, 0, 0, 0.6);
+      text-shadow: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen p-6">
+  <!-- Header -->
+  <header class="relative mb-6">
+    <h1 class="text-4xl text-center heading-text">🚨 Report a Water Issue</h1>
+    <button 
+      onclick="toggleDarkMode()" 
+      class="absolute top-0 right-0 text-sm px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:text-white transition"
+    >
+      🌙 Toggle Dark Mode
+    </button>
+  </header>
+
+  <!-- Form Section -->
+  <div class="overlay shadow-xl p-6 max-w-xl mx-auto mb-8">
+    <form id="issueForm" onsubmit="submitIssue(event)" class="space-y-4">
+      <div>
+        <label class="block font-medium mb-1">Name</label>
+        <input required type="text" id="name" class="w-full p-2 rounded border border-blue-300" placeholder="Your Name" />
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Phone Number</label>
+        <input required type="tel" id="phone" class="w-full p-2 rounded border border-blue-300" placeholder="10-digit Number" />
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Type of Issue</label>
+        <select id="type" class="w-full p-2 rounded border border-blue-300">
+          <option>💧 No Water</option>
+          <option>🤢 Contaminated</option>
+          <option>⚠️ Low Pressure</option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Location</label>
+        <input type="text" id="location" class="w-full p-2 rounded border border-blue-300" placeholder="e.g., Lajpat Nagar" />
+      </div>
+
+      <div>
+        <label class="block font-medium mb-1">Description</label>
+        <textarea id="desc" class="w-full p-2 rounded border border-blue-300" rows="3" placeholder="Additional details (optional)"></textarea>
+      </div>
+
+      <button type="submit" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-2 rounded shadow transition">
+        Submit Issue 🚀
+      </button>
+    </form>
+  </div>
+
+  <!-- Recent Reports -->
+  <section class="max-w-xl mx-auto">
+    <p class="recent-reports-label">📑 Recent Reports</p>
+    <ul id="issues" class="space-y-4"></ul>
+  </section>
+
+  <!-- Script -->
+  <script>
+    function submitIssue(e) {
+      e.preventDefault();
+
+      const name = document.getElementById("name").value;
+      const phone = document.getElementById("phone").value;
+      const type = document.getElementById("type").value;
+      const location = document.getElementById("location").value;
+      const desc = document.getElementById("desc").value;
+      const now = new Date().toLocaleString();
+
+      const item = document.createElement("li");
+      item.className = "bg-green-100 dark:bg-slate-700 border-l-4 border-green-400 p-4 rounded-xl shadow flex items-start gap-4";
+
+      item.innerHTML = `
+        <img src="https://i.pravatar.cc/48" alt="User Avatar" class="w-12 h-12 rounded-full object-cover border-2 border-green-400" />
+        <div class="flex-1">
+          <div class="flex justify-between items-center">
+            <span class="font-semibold text-blue-800 dark:text-blue-300">${type}</span>
+            <button onclick="toggleStatus(this)" class="text-xs bg-green-200 text-green-800 font-medium px-2 py-1 rounded-full dark:bg-green-500 dark:text-white">
+              🟢 Active
+            </button>
+          </div>
+          <div class="text-sm text-gray-700 dark:text-gray-200">${desc || 'No extra details'}</div>
+          <div class="text-xs text-gray-600 dark:text-gray-400 mt-1">${location} • ${now}</div>
+        </div>
+      `;
+
+      document.getElementById("issues").prepend(item);
+      document.getElementById("issueForm").reset();
+    }
+
+    function toggleStatus(button) {
+      if (button.innerText.includes("Active")) {
+        button.innerText = "✅ Resolved";
+        button.classList.remove("text-green-800", "dark:text-green-300", "border-green-400");
+        button.classList.add("text-blue-800", "dark:text-blue-300", "border-blue-500");
+      } else {
+        button.innerText = "🟢 Active";
+        button.classList.remove("text-blue-800", "dark:text-blue-300", "border-blue-500");
+        button.classList.add("text-green-800", "dark:text-green-300", "border-green-400");
+      }
+
+      button.classList.remove("bg-green-200", "bg-blue-200", "dark:bg-green-500", "dark:bg-blue-500");
+      button.classList.add("bg-white", "border", "font-semibold", "shadow-sm");
+    }
+
+    function toggleDarkMode() {
+      document.body.classList.toggle("dark-mode");
+    }
+  </script>
+</body>
+</html>

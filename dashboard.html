@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>JalAlert Dashboard</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: url('https://images.unsplash.com/photo-1509223197845-458d87318791?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center center fixed;
+      background-size: cover;
+      color: #ffffff;
+    }
+
+    .header {
+      background-color: rgba(0, 0, 51, 0.85);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 15px 30px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .header h1 {
+      color: #00bfff;
+      margin: 0;
+      font-size: 28px;
+    }
+
+    .nav-links {
+      display: flex;
+    }
+
+    .nav-links a {
+  margin-left: 25px;
+  text-decoration: none;
+  color: #ffffff; /* Changed from #20c1ed to white */
+  font-weight: bold; /* Ensures boldness */
+  transition: color 0.3s ease;
+}
+
+.nav-links a:hover {
+  color: #00bfff;
+}
+
+    .menu-icon {
+      font-size: 24px;
+      color: #ffffff;
+      cursor: pointer;
+    }
+
+    .user-icon {
+      font-size: 22px;
+      color: #ffffff;
+      margin-left: 15px;
+    }
+
+    .dropdown-menu {
+      display: none;
+      position: absolute;
+      left: 30px;
+      top: 60px;
+      background-color: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+      overflow: hidden;
+      z-index: 100;
+    }
+
+    .dropdown-menu a {
+      display: block;
+      padding: 12px 20px;
+      text-decoration: none;
+      color: #004080;
+      border-bottom: 1px solid #eee;
+      transition: background 0.3s ease;
+    }
+
+    .dropdown-menu a:hover {
+      background-color: #e0f7fa;
+    }
+
+    .main-content {
+      display: flex;
+      flex-wrap: wrap;
+      padding: 40px 20px;
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    .info-section {
+      flex: 1;
+      background-color: rgba(255, 255, 255, 0.95);
+      color: #003366;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      min-width: 300px;
+      margin: auto;
+    }
+
+    .info-section h2 {
+      color: #004080;
+    }
+
+    .info-section p {
+      font-size: 16px;
+      line-height: 1.7;
+    }
+
+    .info-section button {
+      background-color: #0077cc;
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      font-size: 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+
+    .info-section button:hover {
+      background-color: #005fa3;
+    }
+
+    .features-grid {
+      margin-top: 25px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 15px;
+    }
+
+    .feature-card {
+      background-color: #e0f7fa;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      color: #003366;
+      font-weight: 500;
+      transition: transform 0.2s ease;
+      cursor: pointer;
+    }
+
+    .feature-card:hover {
+      transform: scale(1.05);
+    }
+
+    .contact-section {
+      background-color: rgba(0, 51, 102, 0.8);
+      padding: 20px 40px;
+      text-align: center;
+      color: #ffffff;
+      font-weight: bold;
+      margin-top: 40px;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background-color: rgba(0, 0, 51, 0.9);
+      color: #00bfff;
+      font-size: 14px;
+      border-top: 1px solid #004080;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .modal-content {
+      background: white;
+      color: #003366;
+      padding: 30px;
+      border-radius: 12px;
+      width: 90%;
+      max-width: 500px;
+      text-align: left;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 12px;
+      right: 18px;
+      font-size: 26px;
+      color: #666;
+      cursor: pointer;
+    }
+
+    .alert-box {
+      background-color: #fff4e5;
+      color: #663c00;
+      border: 1px solid #ffd27f;
+      border-left: 6px solid #ff9800;
+      padding: 15px 20px;
+      border-radius: 8px;
+      margin-bottom: 25px;
+      font-size: 15px;
+      font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+      .main-content {
+        flex-direction: column;
+      }
+
+      .nav-links {
+        display: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="menu-icon" onclick="toggleMenu()">
+      <i class="fas fa-bars"></i>
+    </div>
+    <h1>JalAlert</h1>
+    <nav class="bg-[#1e1e4f] text-white px-8 py-4 flex justify-between items-center shadow">
+       
+       
+      
+        <!-- Nav Links -->
+        <div class="flex space-x-4 text-lg font-bold text-white">
+            <a href="main.html" class="px-4 py-2 rounded hover:bg-cyan-500 transition duration-300">Timing</a>
+            <a href="report.html" class="px-4 py-2 rounded hover:bg-cyan-500 transition duration-300">Report Issue</a>
+            <a href="request.html" class="px-4 py-2 rounded hover:bg-cyan-500 transition duration-300">Request Tankers</a>
+            
+          </div>
+          
+      </nav>
+      
+      <a href="dashboard.html">
+        <div class="user-icon">
+          <i class="fas fa-user-circle"></i>
+        </div>
+      </a>
+    <div class="dropdown-menu" id="dropdownMenu">
+      <a href="#"><i class="fas fa-user-edit"></i> Edit Profile</a>
+      <a href="#"><i class="fas fa-cog"></i> Settings</a>
+      <a href="#"><i class="fas fa-info-circle"></i> About</a>
+      <a href="#"><i class="fas fa-sign-out-alt"></i> Logout</a>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <div class="info-section">
+      <div class="alert-box">
+        🚨 Urgent: Water supply will be delayed in Zone B today due to maintenance work.
+      </div>
+      <h2>Welcome to JalAlert</h2>
+      <p>
+        JalAlert is your city's smart water management dashboard. Our goal is to make water accessibility transparent, timely, and technology-driven. Stay informed about water supply schedules, report local disruptions, and request emergency tanker services all from one intuitive platform.
+      </p>
+      <p>
+        With JalAlert, you have the power to stay ahead in water conservation and usage. Whether you're a resident, housing society, or commercial facility, JalAlert empowers you with real-time data and instant assistance.
+      </p>
+      <button onclick="openModal()">Check Today's Water Schedule</button>
+
+      <div class="features-grid">
+        <div class="feature-card" id="timing">Timing</div>
+        <div class="feature-card" id="report">Report Issue</div>
+        <div class="feature-card" id="request">Request Tankers</div>
+        <div class="feature-card">Water Level</div>
+        <div class="feature-card">Usage Stats</div>
+        <div class="feature-card">Nearby Tankers</div>
+        <div class="feature-card">Analytics</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="scheduleModal">
+    <div class="modal-content">
+      <span class="close-btn" onclick="closeModal()">&times;</span>
+      <h2>Today's Water Schedule</h2>
+      <p><strong>Zone A:</strong> 6:00 AM – 8:00 AM</p>
+      <p><strong>Zone B:</strong> 9:00 AM – 11:00 AM</p>
+      <p><strong>Zone C:</strong> 5:00 PM – 7:00 PM</p>
+    </div>
+  </div>
+
+  <div class="contact-section">
+    📞 1800-123-456 | ✉️ support@jalalert.in | 💬 Live Chat Available<br>
+    <span style="font-weight: normal; font-size: 13px;">Service Hours: 6:00 AM – 10:00 PM (All Days)</span>
+  </div>
+
+  <footer>
+    <a href="#" style="color: #00bfff; margin: 0 10px; text-decoration: none;">Privacy Policy</a>
+    <a href="#" style="color: #00bfff; margin: 0 10px; text-decoration: none;">Terms & Conditions</a><br>
+    © 2025 JalAlert Water Services. All rights reserved.
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      const menu = document.getElementById("dropdownMenu");
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    }
+
+    document.addEventListener("click", function(event) {
+      const menu = document.getElementById("dropdownMenu");
+      const icon = document.querySelector(".menu-icon");
+      if (!menu.contains(event.target) && !icon.contains(event.target)) {
+        menu.style.display = "none";
+      }
+    });
+
+    function openModal() {
+      document.getElementById("scheduleModal").style.display = "flex";
+    }
+
+    function closeModal() {
+      document.getElementById("scheduleModal").style.display = "none";
+    }
+  </script>
+</body>
+</html>

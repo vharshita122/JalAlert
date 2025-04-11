@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html>
+  
+<head>
+  <title>JalSetu - Water Timings</title>
+  <style>
+body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(to right, #001f3f, #0074D9);
+  color: #fff;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header Section */
+header {
+  background: #fff;
+  color: #0074D9;
+  padding: 20px;
+  text-align: center;
+  border-bottom: 4px solid #00BFFF;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+/* Navigation Bar */
+nav {
+  background: linear-gradient(to right, #00c6ff, #0072ff);
+  display: flex;
+  justify-content: center;
+  padding: 15px 0;
+  gap: 60px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 18px;
+  transition: transform 0.2s ease;
+}
+
+nav a:hover {
+  transform: scale(1.1);
+  text-decoration: underline;
+}
+
+/* Main Container */
+.container {
+  max-width: 1000px;
+  width: 90%;
+  margin: 20px auto; /* Reduced bottom spacing */
+  padding: 30px;
+  background-color: #ffffff;
+  border-radius: 10px;
+  color: #000;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  flex: 1; /* Take available space */
+}
+
+/* Headings */
+h2 {
+  text-align: center;
+  color: #0074D9;
+}
+
+/* Select Area Filter */
+select {
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 5px;
+  border: 1px solid #0074D9;
+}
+
+/* Table Styling */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-top: 20px;
+}
+
+th, td {
+  border: 1px solid #ccc;
+  padding: 12px;
+  text-align: center;
+}
+
+th {
+  background-color: #0074D9;
+  color: white;
+}
+
+/* Button Styling */
+button {
+  background-color: #0074D9;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+button:hover {
+  background-color: #005fa3;
+}
+
+.request-btn {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* Search Input */
+#searchInput {
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 15px;
+  padding: 8px;
+}
+
+
+
+  
+
+       
+  </style>
+</head>
+<body>
+
+<header>
+  <h1> 💧Jal Alert</h1>
+</header>
+
+<nav class="bg-blue-500 p-4 flex justify-center gap-8 text-white font-semibold text-lg">
+  <a href="dashboard.html" class="hover:underline">Dashboard</a>
+  <a href="main.html" class="hover:underline">Timings</a>
+  <a href="request.html" class="hover:underline">Request Tanker</a>
+  <a href="report.html" class="hover:underline">Report Issues</a>
+</nav>
+
+
+<div class="container">
+  <h2>Water Supply Timings</h2>
+
+ 
+
+  <label for="areaSelect">Select Area:</label>
+  
+
+  <select id="areaSelect" onchange="filterData()">
+    <option value="all">All Areas</option>
+    <label for="searchInput">Search Area:</label>
+<input type="text" id="searchInput" placeholder="Type area name..." onkeyup="searchArea()" style="padding: 6px; margin-left: 10px; margin-bottom: 10px; width: 200px;">
+   
+    
+   
+  </select>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Area</th>
+        <th>Date</th>
+        <th>Start Time</th>
+        <th>End Time</th>
+      </tr>
+    </thead>
+    <tbody id="dataBody"></tbody>
+  </table>
+</div>
+
+<script>
+  const url = "https://opensheet.elk.sh/1DjQlMNRMZfnAO3F1ZGdzZFJGnSxFEAigf_31RxBPe0E/Sheet1";
+  let waterData = [];
+
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      waterData = data;
+      populateDropdown(data);
+      displayData(data);
+    })
+    .catch(err => console.error("Error fetching data:", err));
+
+  function populateDropdown(data) {
+    const areas = [...new Set(data.map(item => item["Area"]))];
+    const dropdown = document.getElementById("areaSelect");
+    areas.forEach(area => {
+      const option = document.createElement("option");
+      option.value = area;
+      option.textContent = area;
+      dropdown.appendChild(option);
+    });
+  }
+
+  function displayData(data) {
+    const tbody = document.getElementById("dataBody");
+    tbody.innerHTML = "";
+    data.forEach(row => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${row["Area"]}</td>
+        <td>${row["Date"]}</td>
+        <td>${row["Start Time"]}</td>
+        <td>${row["End Time"]}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
+  function filterData() {
+    const selected = document.getElementById("areaSelect").value;
+    if (selected === "all") {
+      displayData(waterData);
+    } else {
+      const filtered = waterData.filter(row => row["Area"] === selected);
+      displayData(filtered);
+    }
+  }
+  function searchArea() {
+      const input = document.getElementById("searchInput").value.toLowerCase();
+      const filtered = waterData.filter(row => row["Area"].toLowerCase().includes(input));
+      displayData(filtered);
+    }
+</script>
+
+</body>
+</html>
+
+
+
